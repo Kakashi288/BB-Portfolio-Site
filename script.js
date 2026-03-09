@@ -8,17 +8,24 @@ links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => links
 const navAs = document.querySelectorAll('.nav-links a');
 const targets = document.querySelectorAll('section[id]');
 
-const io = new IntersectionObserver(entries => {
-entries.forEach(e => {
-if (e.isIntersecting) {
-navAs.forEach(a => a.classList.remove('active'));
-const match = document.querySelector(`.nav-links a[href="#${e.target.id}"]`);
-if (match) match.classList.add('active');
+function updateActiveNav() {
+const scrollY = window.scrollY;
+const navHeight = document.getElementById('navbar').offsetHeight;
+let current = '';
+
+targets.forEach(section => {
+if (scrollY >= section.offsetTop - navHeight - 80) {
+current = section.id;
 }
 });
-}, { threshold: 0.35 });
 
-targets.forEach(t => io.observe(t));
+navAs.forEach(a => {
+a.classList.toggle('active', a.getAttribute('href') === `#${current}`);
+});
+}
+
+window.addEventListener('scroll', updateActiveNav, { passive: true });
+updateActiveNav();
 
 // Contact form — Formspree via fetch (no redirect)
 const contactForm = document.querySelector('.contact-form');
