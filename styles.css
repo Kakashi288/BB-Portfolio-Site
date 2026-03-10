@@ -491,6 +491,46 @@ footer {
   border-top: 1px solid var(--border);
 }
 
+/* ── SCROLL REVEAL ───────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity .55s ease var(--reveal-delay, 0s),
+              transform .55s ease var(--reveal-delay, 0s);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ── HERO: SOCIAL LINKS & CV BUTTON ─────── */
+.hero-social {
+  display: flex;
+  gap: .6rem;
+  margin-top: 1.5rem;
+}
+.social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  color: var(--t2);
+  transition: color .2s, border-color .2s, background .2s, transform .2s;
+}
+.social-link:hover {
+  color: var(--a1);
+  border-color: var(--a1);
+  background: rgba(79,142,247,.08);
+  transform: translateY(-2px);
+}
+.btn-cv {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+}
+
 /* ── RESPONSIVE ──────────────────────────── */
 @media (max-width: 768px) {
   .nav-links {

@@ -70,3 +70,58 @@ card.classList.toggle('hidden', !match);
 });
 });
 });
+
+// ── SCROLL REVEAL ─────────────────────────
+const revealSelectors = [
+'.skill-card', '.tl-item', '.cert-card',
+'.edu-card', '.extra-card', '.proj-card',
+'.about-card', '.about-text'
+];
+
+revealSelectors.forEach(sel => {
+document.querySelectorAll(sel).forEach((el, i) => {
+el.classList.add('reveal');
+el.style.setProperty('--reveal-delay', `${(i % 5) * 0.07}s`);
+});
+});
+
+const revealObserver = new IntersectionObserver(entries => {
+entries.forEach(entry => {
+if (entry.isIntersecting) {
+entry.target.classList.add('visible');
+revealObserver.unobserve(entry.target);
+}
+});
+}, { threshold: 0.12 });
+
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+// ── ANIMATED STAT COUNTERS ────────────────
+function runCounter(el) {
+const raw = el.textContent.trim();
+const match = raw.match(/^([£$€]?)(\d+)(.*)$/);
+if (!match) return; // non-numeric (MSc, PMP) — leave as-is
+const [, pre, numStr, suf] = match;
+const target = parseInt(numStr, 10);
+const duration = 1400;
+const startTime = performance.now();
+
+function tick(now) {
+const t = Math.min((now - startTime) / duration, 1);
+const ease = 1 - Math.pow(1 - t, 3);
+el.textContent = pre + Math.floor(ease * target) + suf;
+if (t < 1) requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+}
+
+const heroStats = document.querySelector('.hero-stats');
+if (heroStats) {
+let counted = false;
+new IntersectionObserver(([entry]) => {
+if (entry.isIntersecting && !counted) {
+counted = true;
+heroStats.querySelectorAll('.stat-val').forEach(runCounter);
+}
+}, { threshold: 0.5 }).observe(heroStats);
+}
